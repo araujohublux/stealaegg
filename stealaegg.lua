@@ -1,5 +1,5 @@
 -- =====================================================================
--- Steal an Egg: Bot Completo (Auto Kill de Robôs + Auto Steal + Preço de Ovos)
+-- Steal an Egg: Bot Completo (Versão Corrigida para Ataque)
 -- =====================================================================
 
 local Players = game:GetService("Players")
@@ -7,12 +7,10 @@ local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
 
--- Configurações globais
 getgenv().Config = {
     AutoKillRobots = true,
-    AutoStealEgg = true,
     ShowEggPrices = true,
-    TargetName = "EXPERIMENTO DO DR. SCRAMBLE"
+    TargetName = "EXPERIMENTO DO DR. SCRAMBLE" -- Se necessário, altere para parte do nome em minúsculas
 }
 
 -- Criando a Interface Gráfica (GUI)
@@ -82,25 +80,28 @@ ToggleEggBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Loop principal: Auto Kill dos Robôs
+-- Loop principal corrigido: Auto Kill robusto
 task.spawn(function()
-    while task.wait(0.4) do
+    while task.wait(0.3) do
         if getgenv().Config.AutoKillRobots then
             pcall(function()
+                local char = LocalPlayer.Character
+                if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+                
                 for _, obj in pairs(Workspace:GetDescendants()) do
-                    if obj.Name == getgenv().Config.TargetName and obj:FindFirstChild("Humanoid") and obj:FindFirstChild("HumanoidRootPart") then
-                        local humanoid = obj.Humanoid
-                        local rootPart = obj.HumanoidRootPart
+                    -- Procura por semelhança no nome para evitar falhas de maiúsculas/minúsculas
+                    if obj:IsA("Model") and (obj.Name == getgenv().Config.TargetName or string.find(string.upper(obj.Name), "SCRAMBLE") or string.find(string.upper(obj.Name), "EXPERIMENTO")) then
+                        local humanoid = obj:FindFirstChildOfClass("Humanoid")
+                        local rootPart = obj:FindFirstChild("HumanoidRootPart") or obj.PrimaryPart
                         
-                        if humanoid.Health > 0 then
-                            local char = LocalPlayer.Character
-                            if char and char:FindFirstChild("HumanoidRootPart") then
-                                char.HumanoidRootPart.CFrame = rootPart.CFrame + Vector3.new(0, 3, 2)
-                                
-                                local tool = char:FindFirstChildOfClass("Tool")
-                                if tool then
-                                    tool:Activate()
-                                end
+                        if humanoid and rootPart and humanoid.Health > 0 then
+                            -- Teleporta para cima/trás do robô
+                            char.HumanoidRootPart.CFrame = rootPart.CFrame * CFrame.new(0, 0, 3)
+                            
+                            -- Ativa a ferramenta se houver alguma equipada
+                            local tool = char:FindFirstChildOfClass("Tool")
+                            if tool then
+                                tool:Activate()
                             end
                         end
                     end
@@ -110,22 +111,4 @@ task.spawn(function()
     end
 end)
 
--- Loop secundário: Monitoramento de Ovos e Preços
-task.spawn(function()
-    while task.wait(1) do
-        if getgenv().Config.ShowEggPrices then
-            pcall(function()
-                for _, item in pairs(Workspace:GetDescendants()) do
-                    if string.find(string.lower(item.Name), "egg") or string.find(string.lower(item.Name), "ovo") then
-                        local priceAttr = item:GetAttribute("Price") or item:GetAttribute("Value")
-                        if priceAttr then
-                            print("Ovo encontrado: " .. item.Name .. " | Preço: " .. tostring(priceAttr))
-                        end
-                    end
-                end
-            end)
-        end
-    end
-end)
-
-print("Script executado com sucesso! Painel flutuante carregado.")
+print("Script atualizado carregado com sucesso!")
