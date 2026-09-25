@@ -7,7 +7,7 @@ local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
 
--- Configurações globais de toggles
+-- Configurações globais
 getgenv().Config = {
     AutoKillRobots = true,
     AutoStealEgg = true,
@@ -15,7 +15,7 @@ getgenv().Config = {
     TargetName = "EXPERIMENTO DO DR. SCRAMBLE"
 }
 
--- Criando uma Interface Gráfica Simples (GUI) na tela
+-- Criando a Interface Gráfica (GUI)
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "StealAnEggBotGui"
 ScreenGui.Parent = CoreGui
@@ -60,7 +60,7 @@ ToggleRobotBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Botão para Mostrar Preço/Dados dos Ovos
+-- Botão para Mostrar Preço dos Ovos
 local ToggleEggBtn = Instance.new("TextButton")
 ToggleEggBtn.Size = UDim2.new(0.9, 0, 0, 35)
 ToggleEggBtn.Position = UDim2.new(0.05, 0, 0.55, 0)
@@ -82,7 +82,7 @@ ToggleEggBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Loop principal: Auto Kill dos Robôs ("Experimento do Dr. Scramble")
+-- Loop principal: Auto Kill dos Robôs
 task.spawn(function()
     while task.wait(0.4) do
         if getgenv().Config.AutoKillRobots then
@@ -95,10 +95,8 @@ task.spawn(function()
                         if humanoid.Health > 0 then
                             local char = LocalPlayer.Character
                             if char and char:FindFirstChild("HumanoidRootPart") then
-                                -- Posiciona perto do robô para atacar
                                 char.HumanoidRootPart.CFrame = rootPart.CFrame + Vector3.new(0, 3, 2)
                                 
-                                -- Ativa a ferramenta equipada
                                 local tool = char:FindFirstChildOfClass("Tool")
                                 if tool then
                                     tool:Activate()
@@ -112,7 +110,7 @@ task.spawn(function()
     end
 end)
 
--- Loop secundário: Monitoramento / ESP de Ovos e Preços
+-- Loop secundário: Monitoramento de Ovos e Preços
 task.spawn(function()
     while task.wait(1) do
         if getgenv().Config.ShowEggPrices then
