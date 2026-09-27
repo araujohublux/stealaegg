@@ -1,0 +1,41 @@
+--[[
+    Project: Hub Otimizado para Roblox / GitHub
+    Linguagem: Luau
+]]
+
+-- 1. VERIFICAÇÃO DE SEGURANÇA E AMBIENTE
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Prevenção contra múltiplas instâncias a correr ao mesmo tempo
+local PROTECTION_NAME = "CustomHub_Loaded_Instance"
+if _G[PROTECTION_NAME] then
+    warn("[Hub]: O Hub já se encontra em execução!")
+    return
+end
+_G[PROTECTION_NAME] = true
+
+-- Notificação visual inicial no jogo
+pcall(function()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Hub Carregado",
+        Text = "Script executado com sucesso!",
+        Duration = 5
+    })
+end)
+
+print("[Hub]: Script iniciado com sucesso para " .. LocalPlayer.Name)
+
+-- 2. FUNÇÕES PRINCIPAIS DO SCRIPT
+local function ExemploFuncao()
+    pcall(function()
+        -- Exemplo de alteração segura no personagem (ex: Velocidade)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = 30
+            print("[Hub]: Velocidade ajustada com segurança!")
+        end
+    end)
+end
+
+-- Executa a função de exemplo ao carregar
+ExemploFuncao()
