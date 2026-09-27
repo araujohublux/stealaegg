@@ -1,20 +1,14 @@
 --[[
-    Project: Miranda Hub Style (Base Otimizada)
+    Project: Miranda Hub Style (Com Interface Gráfica)
     Linguagem: Luau (Roblox)
 ]]
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
 
--- Proteção contra múltiplas instâncias
-if _G.MirandaHubLoaded then
-    warn("[Miranda Hub]: O Hub já está ativo!")
-    return
-end
-_G.MirandaHubLoaded = true
+print("[Miranda Hub]: A iniciar interface...")
 
--- Notificação de carregamento estilo Hub
+-- Notificação visual inicial
 pcall(function()
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Miranda Hub",
@@ -23,28 +17,53 @@ pcall(function()
     })
 end)
 
-print("[Miranda Hub]: Inicializado com segurança.")
+-- Criar Interface Gráfica Básica (GUI) para aparecer no ecrã
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local ActionButton = Instance.new("TextButton")
 
--- Exemplo de funções principais integradas (Estilo Miranda)
-local HubFunctions = {}
+-- Configurar a GUI
+ScreenGui.Name = "MirandaHubGUI"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
 
-function HubFunctions:InstantSteal()
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Active = true
+MainFrame.Draggable = true -- Permite arrastar a janela no ecrã
+
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Font = Enum.Font.SourceSansBold
+Title.Text = "★ Miranda Hub ★"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+
+ActionButton.Name = "ActionButton"
+ActionButton.Parent = MainFrame
+ActionButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+ActionButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+ActionButton.Size = UDim2.new(0.8, 0, 0, 40)
+ActionButton.Font = Enum.Font.SourceSansBold
+ActionButton.Text = "Ativar Função Exemplo"
+ActionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ActionButton.TextSize = 16
+
+-- Ação do botão
+ActionButton.MouseButton1Click:Connect(function()
     pcall(function()
-        -- Lógica de interação rápida / Bypass de animação
-        print("[Miranda Hub]: Função Instant Steal acionada.")
-    end)
-end
-
-function HubFunctions:TeleportToTarget(targetPosition)
-    pcall(function()
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetPosition)
-            print("[Miranda Hub]: Teletransporte efetuado com sucesso.")
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = 35
+            print("[Miranda Hub]: Velocidade aumentada!")
         end
     end)
-end
+end)
 
--- Exemplo de ativação de uma rotina
-HubFunctions:InstantSteal()
-
-return HubFunctions
+print("[Miranda Hub]: Interface carregada com sucesso no ecrã!")
