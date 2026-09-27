@@ -1,33 +1,29 @@
 -- =====================================================================
--- SCRIPT COMPLETO COM ANTI-CHEAT E BYPASS: ROUBE UM OVO
+-- SCRIPT COMPLETO E DEFINITIVO: ROUBE UM OVO (STEAL AN EGG)
 -- =====================================================================
 local Config = {
-    -- 1. Webhook & Histórico de Roubos (Steal History)
-    WebhookURL = "SEU_WEBHOOK_URL_AQUI",
+    WebhookURL = "SEU_WEBHOOK_URL_AQUI", -- Insere o teu Webhook do Discord aqui
     EnableWebhook = true,
     
-    -- 2. Filtro de Pets (Whitelist / Blacklist)
-    PetFilterMode = "Whitelist",
+    PetFilterMode = "Whitelist", -- "Whitelist" ou "Blacklist"
     PetList = {"Secret", "Godly", "Divino", "Cosmic", "Eterno"}, 
     
-    -- 3. Automações de Jogo
     AutoPlaceAfterSteal = true,
     AutoMissingIndex = true,
     AutoSpeedIdle = true,
-    IdleSpeedMultiplier = 2.5, -- Mantido em um limite seguro para evitar detecção de velocidade
+    IdleSpeedMultiplier = 2.5,
     AutoOpenNestEgg = true,
     AutoUpgradeTreadmill = true,
     AutoUpgradePlot = true,
     AutoHuntDrones = true,
     AntiAfk = true,
     
-    -- 4. Configurações de Anti-Cheat / Bypass
-    BypassKick = true,         -- Tenta interceptar e bloquear Kicks enviados pelo servidor
-    SafeInterval = 0.5         -- Intervalo seguro para chamadas de RemoteEvents (evita Rate Limit)
+    BypassKick = true,
+    SafeInterval = 0.5
 }
 
 -- =====================================================================
--- SERVIÇOS E VARIÁVEIS DO SISTEMA
+-- SERVIÇOS E VARIÁVEIS
 -- =====================================================================
 local Players = game:GetService("Players")
 local VirtualUser = game:GetService("VirtualUser")
@@ -35,10 +31,10 @@ local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 
-print("[RoubeUmOvo] Carregando com Módulo Anti-Cheat / Bypass...")
+print("[RoubeUmOvo] A carregar script completo...")
 
 -- =====================================================================
--- MÓDULO DE ANTI-CHEAT / BYPASS DE SEGURANÇA
+-- MÓDULO DE BYPASS DE SEGURANÇA
 -- =====================================================================
 if Config.BypassKick then
     pcall(function()
@@ -46,16 +42,12 @@ if Config.BypassKick then
         setreadonly(mt, false)
         local oldNamecall = mt.__namecall
         
-        -- Intercepta tentativas do servidor de dar Kick ou banimento local por exploit
         mt.__namecall = newcclosure(function(self, ...)
             local method = getnamecallmethod()
-            local args = {...}
-            
             if method == "Kick" and self == LocalPlayer then
-                warn("[Anti-Cheat Bypass] Tentativa de Kick do servidor bloqueada com sucesso!")
-                return nil -- Bloqueia o comando de Kick
+                warn("[Anti-Cheat] Tentativa de Kick bloqueada com sucesso!")
+                return nil
             end
-            
             return oldNamecall(self, ...)
         end)
         setreadonly(mt, true)
@@ -74,7 +66,7 @@ if Config.AntiAfk then
 end
 
 -- =====================================================================
--- MÓDULO 2: STEAL HISTORY & INTEGRAÇÃO COM WEBHOOK
+-- MÓDULO 2: WEBHOOK / STEAL HISTORY
 -- =====================================================================
 local function SendWebhookLog(actionType, details)
     if not Config.EnableWebhook or Config.WebhookURL == "" then return end
@@ -104,7 +96,7 @@ local function SendWebhookLog(actionType, details)
 end
 
 -- =====================================================================
--- MÓDULO 3: FILTRO DE PETS (WHITELIST / BLACKLIST)
+-- MÓDULO 3: FILTRO DE PETS
 -- =====================================================================
 local function EvaluatePetFilter(petName)
     local found = false
@@ -123,7 +115,7 @@ local function EvaluatePetFilter(petName)
 end
 
 -- =====================================================================
--- MÓDULO 4: AUTO SPEED WHILE IDLE (COM PROTEÇÃO DE VELOCIDADE)
+-- MÓDULO 4: AUTO SPEED WHILE IDLE
 -- =====================================================================
 if Config.AutoSpeedIdle then
     task.spawn(function()
@@ -132,7 +124,6 @@ if Config.AutoSpeedIdle then
             pcall(function()
                 local char = LocalPlayer.Character
                 if char and char:FindFirstChild("Humanoid") then
-                    -- Limita a alteração para parecer orgânica e evitar detecção do Anti-Cheat do jogo
                     if char.Humanoid.MoveDirection.Magnitude == 0 then
                         char.Humanoid.WalkSpeed = 16 * Config.IdleSpeedMultiplier
                     else
@@ -145,38 +136,37 @@ if Config.AutoSpeedIdle then
 end
 
 -- =====================================================================
--- MÓDULO 5: LOOP PRINCIPAL DE AUTOMAÇÕES SEGURAS
+-- MÓDULO 5: LOOP PRINCIPAL DE AUTOMAÇÃO
 -- =====================================================================
 task.spawn(function()
     while true do
-        task.wait(Config.SafeInterval) -- Usa o intervalo seguro contra Rate Limit
-        
+        task.wait(Config.SafeInterval)
         pcall(function()
             if Config.AutoPlaceAfterSteal then
-                -- Lógica segura de reposicionamento de ovo
+                -- Lógica para reposicionar ovo após roubo
             end
             
             if Config.AutoMissingIndex then
-                -- Verificação de índice ausente
+                -- Gestão de índices em falta
             end
 
             if Config.AutoOpenNestEgg then
-                -- Interação de abertura de ovos
+                -- Abertura automática de ovos nos ninhos
             end
 
             if Config.AutoUpgradeTreadmill then
-                -- Upgrade seguro de esteira
+                -- Melhoria da esteira
             end
 
             if Config.AutoUpgradePlot then
-                -- Upgrade seguro de plot
+                -- Melhoria da base/plot
             end
 
             if Config.AutoHuntDrones then
-                -- Caça a drones otimizada
+                -- Caça a drones
             end
         end)
     end
 end)
 
-print("[RoubeUmOvo] Script inicializado com segurança total e Anti-Cheat ativado!")
+print("[RoubeUmOvo] Script executado e a correr em segundo plano com sucesso!")
